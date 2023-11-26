@@ -167,7 +167,6 @@ fun VehicleItem(
 fun VehicleItemPreview() {
     VehicleSalesTheme {
         val car = Car(
-            2,
             "Gas",
             4,
             "Gasoline"
@@ -186,17 +185,17 @@ fun VehicleItemPreview() {
 fun VehiclePreview() {
     VehicleSalesTheme {
         val vehicles = listOf(
-            Car( 2, "Gas", 4, "Gasoline").apply{
+            Car( "Gas", 4, "Gasoline").apply{
                 name = "Toyota Supra"
                 color = "White"
                 year = 1998
                 price = 500000000.0 },
-            Car( 2, "Gas", 4, "Gasoline").apply{
+            Car( "Gas", 4, "Gasoline").apply{
                 name = "Toyota Supra"
                 color = "White"
                 year = 1998
                 price = 500000000.0 },
-            Motorcycle( 2, "Gas", "Gasoline", "Manual").apply{
+            Motorcycle( "Gas", "Gasoline", "Manual").apply{
                 name = "Toyota Supra"
                 color = "White"
                 year = 1998
