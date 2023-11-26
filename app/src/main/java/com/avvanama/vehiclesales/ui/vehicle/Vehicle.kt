@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.avvanama.vehiclesales.database.Car
+import com.avvanama.vehiclesales.database.Motorcycle
 import com.avvanama.vehiclesales.database.Vehicle
 import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 
@@ -114,7 +116,7 @@ fun VehicleItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                Icons.Outlined.Star,
+                if(vehicle is Car) Icons.Outlined.Star else Icons.Outlined.Build,
                 contentDescription = ""
             )
             Column(
@@ -194,7 +196,11 @@ fun VehiclePreview() {
                 color = "White"
                 year = 1998
                 price = 500000000.0 },
-
+            Motorcycle( 2, "Gas", "Gasoline", "Manual").apply{
+                name = "Toyota Supra"
+                color = "White"
+                year = 1998
+                price = 500000000.0 },
         )
 
         Vehicle(vehicles = vehicles) {}
