@@ -31,7 +31,7 @@ data class Motorcycle(
 }
 
 @Entity(tableName = "car")
-public data class Car(
+data class Car(
     var machine: String,
     var passengerCapacity: Int,
     var type: String,

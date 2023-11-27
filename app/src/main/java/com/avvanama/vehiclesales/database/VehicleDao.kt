@@ -15,16 +15,16 @@ interface VehicleDao {
     suspend fun insertMotorcycle(motorcycle: Motorcycle)
 
     @Query("SELECT * FROM vehicle")
-    suspend fun getAllVehicles(): Flow<List<Vehicle>>
+    fun getAllVehicles(): Flow<List<Vehicle>>
 
     @Query("SELECT * FROM vehicle WHERE id = :id")
-    suspend fun getVehicle(id: Int): Flow<Vehicle>
+    fun getVehicle(id: Int): Flow<Vehicle>
 
     @Query("SELECT * FROM car WHERE id = :id")
-    suspend fun getCar(id: Int): Flow<Car>
+    fun getCar(id: Int): Flow<Car>
 
     @Query("SELECT * FROM motorcycle WHERE id = :id")
-    suspend fun getMotorcycle(id: Int): Flow<Motorcycle>
+    fun getMotorcycle(id: Int): Flow<Motorcycle>
 
     @Query("DELETE FROM vehicle WHERE id = :id")
     suspend fun deleteVehicle(id: Int)

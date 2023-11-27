@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -35,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -43,18 +45,24 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.avvanama.vehiclesales.database.Car
 import com.avvanama.vehiclesales.database.Motorcycle
 import com.avvanama.vehiclesales.database.Vehicle
+import com.avvanama.vehiclesales.database.VehicleDatabase
+import com.avvanama.vehiclesales.database.VehicleRepository
 import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Vehicle(
-    vehicles: List<Vehicle>,
     modifier: Modifier = Modifier,
+    viewModel: VehicleViewModel = hiltViewModel(),
     onVehicleSelected: (Vehicle) -> Unit
 ) {
+    val vehicles = viewModel.vehicles.collectAsState()
+
     Scaffold(
         topBar = {
             VehicleSalesTopAppBar("Vehicles")
@@ -66,13 +74,36 @@ fun Vehicle(
         },
         modifier = modifier
     ) { it ->
-        LazyColumn(
-            modifier = Modifier.padding(it)
-        ) {
-            item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
-            items (vehicles) { vehicle ->
-                Spacer(modifier = Modifier.height(8.dp))
-                VehicleItem(vehicle = vehicle)
+        if (vehicles.value.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier.padding(it)
+            ) {
+                item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
+                items(vehicles.value) { vehicle ->
+                    Spacer(modifier = Modifier.height(8.dp))
+                    VehicleItem(vehicle = vehicle)
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    Icons.Rounded.Warning,
+                    contentDescription = "Account",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+                Text(
+                    text = "No vehicles found",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     }
@@ -177,31 +208,5 @@ fun VehicleItemPreview() {
             price = 500000000.0
         }
         VehicleItem(vehicle = car)
-    }
-}
-
-@Preview
-@Composable
-fun VehiclePreview() {
-    VehicleSalesTheme {
-        val vehicles = listOf(
-            Car( "Gas", 4, "Gasoline").apply{
-                name = "Toyota Supra"
-                color = "White"
-                year = 1998
-                price = 500000000.0 },
-            Car( "Gas", 4, "Gasoline").apply{
-                name = "Toyota Supra"
-                color = "White"
-                year = 1998
-                price = 500000000.0 },
-            Motorcycle( "Gas", "Gasoline", "Manual").apply{
-                name = "Toyota Supra"
-                color = "White"
-                year = 1998
-                price = 500000000.0 },
-        )
-
-        Vehicle(vehicles = vehicles) {}
     }
 }

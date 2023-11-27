@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -74,4 +76,12 @@ dependencies {
     implementation("androidx.room:room-ktx:2.4.3")
 
     implementation("androidx.navigation:navigation-compose:2.7.5")
+
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
+}
+
+kapt {
+    correctErrorTypes = true
 }
