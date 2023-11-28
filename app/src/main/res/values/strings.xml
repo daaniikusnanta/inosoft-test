@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">VehicleSales</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="sales">Sales</string>
+    <string name="report">Report</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.avvanama.vehiclesales.ui.vehicle
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -59,27 +61,30 @@ import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 fun Vehicle(
     modifier: Modifier = Modifier,
     viewModel: VehicleViewModel = hiltViewModel(),
+    navigateToAddCar: () -> Unit,
     onVehicleSelected: (Vehicle) -> Unit
 ) {
-    val vehicles = viewModel.vehicles.collectAsState()
+    val vehiclesUiState by viewModel.vehiclesUiState.collectAsState()
+    val vehicles = vehiclesUiState.vehicleList
+    Log.d("Vehicle", "Vehicle: ${vehiclesUiState.vehicleList}")
 
     Scaffold(
         topBar = {
             VehicleSalesTopAppBar("Vehicles")
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { TODO() }) {
+            FloatingActionButton(onClick = navigateToAddCar) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         },
         modifier = modifier
     ) { it ->
-        if (vehicles.value.isNotEmpty()) {
+        if (vehicles.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier.padding(it)
             ) {
                 item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
-                items(vehicles.value) { vehicle ->
+                items(items = vehicles, key = { it.id }) { vehicle ->
                     Spacer(modifier = Modifier.height(8.dp))
                     VehicleItem(vehicle = vehicle)
                 }

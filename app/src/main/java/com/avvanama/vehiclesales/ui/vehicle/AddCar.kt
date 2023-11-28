@@ -24,21 +24,39 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.avvanama.vehiclesales.database.Car
+import com.avvanama.vehiclesales.database.Vehicle
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+
+//@Preview(showBackground = true)
 @Composable
-fun AddCar() {
+fun AddCar(
+    onBackClick: () -> Unit,
+    navigateBack: () -> Unit,
+    viewModel: AddCarViewModel = hiltViewModel()
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val carUiState = viewModel.carUiState
+    val carDetails = carUiState.carDetails
     val scrollState = rememberScrollState()
 
     Column {
-        AddCarTopBar("Add Car")
+        AddCarTopBar("Add Car", onBackClick)
 //        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
         Column (
             modifier = Modifier
@@ -46,25 +64,25 @@ fun AddCar() {
                 .weight(1f)
                 .verticalScroll(scrollState)
         ) {
-            AddVehicleTextField(label = "Name", value = "", onValueChange = { })
+            AddVehicleTextField(label = "Name", value = carDetails.name, onValueChange = { viewModel.updateUiState(carDetails.copy(name = it)) })
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Year", value = "", onValueChange = { }, keyboardType = KeyboardType.Number)
+            AddVehicleTextField(label = "Year", value = carDetails.year, onValueChange = { viewModel.updateUiState(carDetails.copy(year = it)) }, keyboardType = KeyboardType.Number)
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Color", value = "", onValueChange = {})
+            AddVehicleTextField(label = "Color", value = carDetails.color, onValueChange = { viewModel.updateUiState(carDetails.copy(color = it)) })
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Machine", value = "", onValueChange = {})
+            AddVehicleTextField(label = "Machine", value = carDetails.machine, onValueChange = { viewModel.updateUiState(carDetails.copy(machine = it)) })
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Passenger Capacity", value = "", onValueChange = {}, keyboardType = KeyboardType.Number)
+            AddVehicleTextField(label = "Passenger Capacity", value = carDetails.passengerCapacity, onValueChange = { viewModel.updateUiState(carDetails.copy(passengerCapacity = it)) }, keyboardType = KeyboardType.Number)
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Type", value = "", onValueChange = {})
+            AddVehicleTextField(label = "Type", value = carDetails.type, onValueChange = { viewModel.updateUiState(carDetails.copy(type = it)) })
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Price", value = "", onValueChange = {}, keyboardType = KeyboardType.Number)
+            AddVehicleTextField(label = "Price", value = carDetails.price, onValueChange = { viewModel.updateUiState(carDetails.copy(price = it)) }, keyboardType = KeyboardType.Decimal)
 
             Spacer(modifier = Modifier.padding(16.dp))
             Text(text = "Current Stocks", style = MaterialTheme.typography.titleMedium)
@@ -73,9 +91,8 @@ fun AddCar() {
                 verticalAlignment = Alignment.CenterVertically,
             ){
                 TextField(
-                    value = "",
-                    onValueChange = { },
-                    label = { Text(text = "0") },
+                    value = carDetails.stocks,
+                    onValueChange = { viewModel.updateUiState(carDetails.copy(stocks = it)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.wrapContentWidth()
                 )
@@ -88,7 +105,13 @@ fun AddCar() {
             }
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                coroutineScope.launch {
+                    viewModel.addCar()
+                    navigateBack()
+                }
+            },
+            enabled = carUiState.isEntryValid,
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
@@ -110,20 +133,18 @@ fun AddVehicleTextField(
     Text(text = label, style = MaterialTheme.typography.titleMedium)
     Spacer(modifier = Modifier.padding(4.dp))
     TextField(
-        value = "",
+        value = value,
         onValueChange = onValueChange,
-        label = { Text(text = label) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         modifier = Modifier.fillMaxWidth()
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun AddCarTopBar(
     title: String = "tes",
-    onBackClick: () -> Unit = { TODO() }
+    onBackClick: () -> Unit
 ) {
     TopAppBar(
         title = { Text(text = title) },

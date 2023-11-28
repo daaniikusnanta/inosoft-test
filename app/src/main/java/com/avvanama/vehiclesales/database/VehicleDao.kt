@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface VehicleDao {
 
     @Insert
-    suspend fun insertCar(car: Car)
+    suspend fun insertCar(vehicle:Vehicle, car: Car)
 
     @Insert
     suspend fun insertMotorcycle(motorcycle: Motorcycle)

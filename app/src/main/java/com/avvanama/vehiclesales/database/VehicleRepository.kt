@@ -1,15 +1,22 @@
 package com.avvanama.vehiclesales.database
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class VehicleRepository (private val vehicleDao: VehicleDao) {
 
-    suspend fun insertCar(car: Car) = vehicleDao.insertCar(car)
+    suspend fun insertCar(car: Car) {
+        val vehicle = car as Vehicle
+        vehicleDao.insertCar(vehicle, car)
+    }
 
     suspend fun insertMotorcycle(motorcycle: Motorcycle) = vehicleDao.insertMotorcycle(motorcycle)
 
-    fun getAllVehicles(): Flow<List<Vehicle>> = vehicleDao.getAllVehicles()
+    fun getAllVehicles(): Flow<List<Vehicle>> {
+        Log.d("VehicleRepository", "getAllVehicles: ")
+        return vehicleDao.getAllVehicles()
+    }
 
     fun getVehicle(id: Int): Flow<Vehicle> = vehicleDao.getVehicle(id)
 

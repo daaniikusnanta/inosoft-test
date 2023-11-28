@@ -16,6 +16,7 @@ open class Vehicle {
     var year: Int = 0
     var color: String = ""
     var price: Double = 0.0
+    var stocks: Int = 0
     var vehicleType: VehicleType = VehicleType.CAR
 }
 
