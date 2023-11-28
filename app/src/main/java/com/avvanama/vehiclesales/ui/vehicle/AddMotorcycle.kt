@@ -20,15 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.avvanama.vehiclesales.di.AppViewModelProvider
 import com.avvanama.vehiclesales.ui.components.AddVehicleTextField
-import com.avvanama.vehiclesales.ui.components.AddVehicleTopBar
+import com.avvanama.vehiclesales.ui.components.BackButtonTopBar
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddMotorcycle(
     onBackClick: () -> Unit,
     navigateBack: () -> Unit,
-    viewModel: AddMotorcycleViewModel = hiltViewModel()
+    viewModel: AddMotorcycleViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
     val motorcycleUiState = viewModel.motorcycleUiState
@@ -36,7 +38,7 @@ fun AddMotorcycle(
     val scrollState = rememberScrollState()
 
     Column {
-        AddVehicleTopBar("Add Motorcycle", onBackClick)
+        BackButtonTopBar("Add Motorcycle", onBackClick)
 //        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
         Column (
             modifier = Modifier

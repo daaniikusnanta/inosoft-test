@@ -2,6 +2,7 @@ package com.avvanama.vehiclesales.ui.vehicle
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -55,16 +56,18 @@ import com.avvanama.vehiclesales.database.Motorcycle
 import com.avvanama.vehiclesales.database.Vehicle
 import com.avvanama.vehiclesales.database.VehicleDatabase
 import com.avvanama.vehiclesales.database.VehicleRepository
+import com.avvanama.vehiclesales.database.VehicleType
+import com.avvanama.vehiclesales.di.AppViewModelProvider
 import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Vehicle(
     modifier: Modifier = Modifier,
-    viewModel: VehicleViewModel = hiltViewModel(),
+    viewModel: VehicleViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToAddCar: () -> Unit,
     navigateToAddMotorcycle: () -> Unit,
-    onVehicleSelected: (Vehicle) -> Unit
+    onVehicleSelected: (Int, VehicleType) -> Unit
 ) {
     val vehiclesUiState by viewModel.vehiclesUiState.collectAsState()
     val vehicles = vehiclesUiState.vehicleList
@@ -82,7 +85,7 @@ fun Vehicle(
                 navigateToAddMotorcycle = navigateToAddMotorcycle,
                 modifier = Modifier.padding(top = 8.dp)
             )
-            VehicleList(vehicles = vehicles, modifier = Modifier)
+            VehicleList(vehicles = vehicles, onVehicleSelected = onVehicleSelected, modifier = Modifier)
         }
     }
 }
@@ -113,6 +116,7 @@ fun AddVehicleButton(
 @Composable
 fun VehicleList(
     vehicles: List<Vehicle>,
+    onVehicleSelected: (Int, VehicleType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column (
@@ -127,7 +131,7 @@ fun VehicleList(
                 item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
                 items(items = vehicles, key = { it.id }) { vehicle ->
                     Spacer(modifier = Modifier.height(8.dp))
-                    VehicleItem(vehicle = vehicle)
+                    VehicleItem(vehicle = vehicle, onVehicleSelected = onVehicleSelected)
                 }
             }
         } else {
@@ -179,10 +183,13 @@ fun VehicleSalesTopAppBar(
 
 @Composable
 fun VehicleItem(
-    vehicle: Vehicle
+    vehicle: Vehicle,
+    onVehicleSelected: (Int, VehicleType) -> Unit,
 ) {
     Surface(
-        modifier = Modifier.padding(horizontal = 8.dp),
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .clickable { onVehicleSelected(vehicle.id, vehicle.vehicleType) },
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.primaryContainer,
     ) {
@@ -194,7 +201,7 @@ fun VehicleItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                if(vehicle is Car) Icons.Outlined.Star else Icons.Outlined.Build,
+                if (vehicle.vehicleType == VehicleType.CAR) Icons.Outlined.Star else Icons.Outlined.Build,
                 contentDescription = ""
             )
             Column(
@@ -254,7 +261,7 @@ fun VehicleItemPreview() {
             year = 1998
             price = 500000000.0
         }
-        VehicleItem(vehicle = car)
+        VehicleItem(vehicle = car, onVehicleSelected = { _, _ -> })
     }
 }
 

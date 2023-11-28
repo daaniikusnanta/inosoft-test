@@ -18,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.avvanama.vehiclesales.database.VehicleType
+import com.avvanama.vehiclesales.navigation.Arguments
 import com.avvanama.vehiclesales.navigation.MainDestinations
 import com.avvanama.vehiclesales.navigation.rememberVehicleSalesNavController
 import com.avvanama.vehiclesales.ui.HomeTabs
@@ -26,9 +28,9 @@ import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 import com.avvanama.vehiclesales.ui.vehicle.AddCar
 import com.avvanama.vehiclesales.ui.vehicle.AddMotorcycle
 import com.avvanama.vehiclesales.ui.vehicle.Vehicle
+import com.avvanama.vehiclesales.ui.vehicle.VehicleDetails
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +53,7 @@ fun VehicleSalesApp() {
                 upPress = vehicleSalesNavController::upPress,
                 navigateToAddCar = vehicleSalesNavController::navigateToAddCar,
                 navigateToAddMotorcycle = vehicleSalesNavController::navigateToAddMotorcycle,
+                navigateToVehicleDetails = vehicleSalesNavController::navigateToVehicleDetails,
                 navigateBack = vehicleSalesNavController::navigateBack,
             )
         }
@@ -61,6 +64,7 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
     upPress: () -> Unit,
     navigateToAddCar: () -> Unit,
     navigateToAddMotorcycle: () -> Unit,
+    navigateToVehicleDetails: (Int, VehicleType) -> Unit,
     navigateBack: () -> Unit,
 ) {
     navigation(
@@ -70,7 +74,7 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
         home(
             navigateToAddCar = navigateToAddCar,
             navigateToAddMotorcycle = navigateToAddMotorcycle,
-            onVehicleSelected = { TODO() }
+            onVehicleSelected = navigateToVehicleDetails
         )
     }
     composable(MainDestinations.ADD_CAR) {
@@ -78,5 +82,18 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
     }
     composable(MainDestinations.ADD_MOTORCYCLE) {
         AddMotorcycle(navigateBack, upPress)
+    }
+    composable(
+        route = MainDestinations.VEHICLE_DETAILS_ARG,
+        arguments = listOf(
+            navArgument("vehicleId") {
+                type = NavType.IntType
+            },
+            navArgument(Arguments.VEHICLE_TYPE) {
+                type = NavType.EnumType(VehicleType::class.java)
+            }
+        )
+    ) {
+        VehicleDetails(upPress)
     }
 }

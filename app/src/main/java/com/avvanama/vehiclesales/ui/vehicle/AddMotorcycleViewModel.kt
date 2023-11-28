@@ -10,8 +10,7 @@ import com.avvanama.vehiclesales.database.VehicleType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
-class AddMotorcycleViewModel @Inject constructor(private val vehicleRepository: VehicleRepository): ViewModel() {
+class AddMotorcycleViewModel (private val vehicleRepository: VehicleRepository): ViewModel() {
 
     var motorcycleUiState by mutableStateOf(MotorcycleUiState())
         private set

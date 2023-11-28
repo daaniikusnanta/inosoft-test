@@ -23,6 +23,14 @@ class VehicleRepository (private val vehicleDao: VehicleDao) {
 
     fun getVehicle(id: Int): Flow<Vehicle> = vehicleDao.getVehicle(id)
 
+    fun getVehicleDetails(id: Int, vehicleType: VehicleType): Flow<Vehicle> {
+        Log.d("VehicleRepository", "getVehicleDetails: $id, $vehicleType")
+        return when (vehicleType) {
+            VehicleType.CAR -> getCar(id)
+            VehicleType.MOTORCYCLE -> getMotorcycle(id)
+        }
+    }
+
     fun getCar(id: Int): Flow<Car> = vehicleDao.getCar(id)
 
     fun getMotorcycle(id: Int): Flow<Motorcycle> = vehicleDao.getMotorcycle(id)

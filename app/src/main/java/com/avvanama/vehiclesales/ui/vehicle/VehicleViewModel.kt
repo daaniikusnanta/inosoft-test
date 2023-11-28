@@ -22,8 +22,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class VehicleViewModel @Inject constructor(private val vehicleRepository: VehicleRepository): ViewModel() {
+class VehicleViewModel (private val vehicleRepository: VehicleRepository): ViewModel() {
 
     val vehiclesUiState: StateFlow<VehiclesUiState> =
         vehicleRepository.getAllVehicles().map { vehicles ->

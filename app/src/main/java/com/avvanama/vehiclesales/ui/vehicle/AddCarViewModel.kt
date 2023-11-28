@@ -17,8 +17,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-@HiltViewModel
-class AddCarViewModel @Inject constructor(private val vehicleRepository: VehicleRepository): ViewModel() {
+class AddCarViewModel (private val vehicleRepository: VehicleRepository): ViewModel() {
 
     var carUiState by mutableStateOf(CarUiState())
         private set

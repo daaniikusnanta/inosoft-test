@@ -15,12 +15,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.avvanama.vehiclesales.R
 import com.avvanama.vehiclesales.database.Vehicle
+import com.avvanama.vehiclesales.database.VehicleType
 import com.avvanama.vehiclesales.ui.vehicle.Vehicle
 
 fun NavGraphBuilder.home(
     navigateToAddCar: () -> Unit,
     navigateToAddMotorcycle: () -> Unit,
-    onVehicleSelected: (Vehicle) -> Unit,
+    onVehicleSelected: (Int, VehicleType) -> Unit,
 ) {
     composable(HomeTabs.VEHICLE.route) { from ->
         Vehicle(onVehicleSelected = onVehicleSelected, navigateToAddCar = navigateToAddCar, navigateToAddMotorcycle = navigateToAddMotorcycle)

@@ -1,5 +1,6 @@
 package com.avvanama.vehiclesales.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -10,11 +11,19 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.avvanama.vehiclesales.database.VehicleType
 
 object MainDestinations {
     const val HOME_ROUTE = "home"
     const val ADD_CAR = "add_car"
     const val ADD_MOTORCYCLE = "add_motorcycle"
+    const val VEHICLE_DETAILS = "vehicle_details"
+    const val VEHICLE_DETAILS_ARG = "${VEHICLE_DETAILS}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
+}
+
+object Arguments {
+    const val VEHICLE_ID = "vehicleId"
+    const val VEHICLE_TYPE = "vehicleType"
 }
 
 @Composable
@@ -45,5 +54,10 @@ class VehicleSalesNavController(
 
     fun navigateToAddMotorcycle() {
         navController.navigate(MainDestinations.ADD_MOTORCYCLE)
+    }
+
+    fun navigateToVehicleDetails(vehicleId: Int, vehicleType: VehicleType) {
+        Log.d("navigateToVehicleDetails", "${MainDestinations.VEHICLE_DETAILS}/${vehicleId}/${vehicleType.name}")
+        navController.navigate("${MainDestinations.VEHICLE_DETAILS}/${vehicleId}/${vehicleType.name}")
     }
 }
