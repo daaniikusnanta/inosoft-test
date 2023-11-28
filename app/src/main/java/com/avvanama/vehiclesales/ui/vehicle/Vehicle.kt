@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -62,6 +63,7 @@ fun Vehicle(
     modifier: Modifier = Modifier,
     viewModel: VehicleViewModel = hiltViewModel(),
     navigateToAddCar: () -> Unit,
+    navigateToAddMotorcycle: () -> Unit,
     onVehicleSelected: (Vehicle) -> Unit
 ) {
     val vehiclesUiState by viewModel.vehiclesUiState.collectAsState()
@@ -72,16 +74,55 @@ fun Vehicle(
         topBar = {
             VehicleSalesTopAppBar("Vehicles")
         },
-        floatingActionButton = {
-            FloatingActionButton(onClick = navigateToAddCar) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        },
         modifier = modifier
-    ) { it ->
+    ) {
+        Column (modifier = Modifier.padding(it)) {
+            AddVehicleButton(
+                navigateToAddCar = navigateToAddCar,
+                navigateToAddMotorcycle = navigateToAddMotorcycle,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            VehicleList(vehicles = vehicles, modifier = Modifier)
+        }
+    }
+}
+
+@Composable
+fun AddVehicleButton(
+    navigateToAddCar: () -> Unit,
+    navigateToAddMotorcycle: () -> Unit,
+    modifier: Modifier
+) {
+    Row(modifier = modifier) {
+        Button(
+            onClick = navigateToAddCar,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(text = "Add Car")
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Button(
+            onClick = navigateToAddMotorcycle,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(text = "Add Motorcycle")
+        }
+    }
+}
+
+@Composable
+fun VehicleList(
+    vehicles: List<Vehicle>,
+    modifier: Modifier = Modifier,
+) {
+    Column (
+        modifier = modifier
+    ) {
+        Text(text = "Vehicles", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
+        
         if (vehicles.isNotEmpty()) {
             LazyColumn(
-                modifier = Modifier.padding(it)
+                modifier = Modifier.padding(vertical = 8.dp)
             ) {
                 item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
                 items(items = vehicles, key = { it.id }) { vehicle ->
@@ -92,6 +133,7 @@ fun Vehicle(
         } else {
             Column(
                 modifier = Modifier
+                    .padding(vertical = 8.dp)
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -112,14 +154,14 @@ fun Vehicle(
             }
         }
     }
+    
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VehicleSalesTopAppBar(
-    title: String = "Test"
+    title: String = ""
 ) {
     VehicleSalesTheme {
         TopAppBar(
@@ -213,5 +255,13 @@ fun VehicleItemPreview() {
             price = 500000000.0
         }
         VehicleItem(vehicle = car)
+    }
+}
+
+@Preview
+@Composable
+fun AddVehicleButtonPreview() {
+    VehicleSalesTheme {
+        AddVehicleButton({}, {}, Modifier)
     }
 }

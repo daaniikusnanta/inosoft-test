@@ -11,7 +11,10 @@ class VehicleRepository (private val vehicleDao: VehicleDao) {
         vehicleDao.insertCar(vehicle, car)
     }
 
-    suspend fun insertMotorcycle(motorcycle: Motorcycle) = vehicleDao.insertMotorcycle(motorcycle)
+    suspend fun insertMotorcycle(motorcycle: Motorcycle) {
+        val vehicle = motorcycle as Vehicle
+        vehicleDao.insertMotorcycle(vehicle, motorcycle)
+    }
 
     fun getAllVehicles(): Flow<List<Vehicle>> {
         Log.d("VehicleRepository", "getAllVehicles: ")

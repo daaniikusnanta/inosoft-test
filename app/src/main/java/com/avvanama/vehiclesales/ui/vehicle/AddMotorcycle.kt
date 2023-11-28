@@ -9,16 +9,10 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -30,21 +24,19 @@ import com.avvanama.vehiclesales.ui.components.AddVehicleTextField
 import com.avvanama.vehiclesales.ui.components.AddVehicleTopBar
 import kotlinx.coroutines.launch
 
-
-//@Preview(showBackground = true)
 @Composable
-fun AddCar(
+fun AddMotorcycle(
     onBackClick: () -> Unit,
     navigateBack: () -> Unit,
-    viewModel: AddCarViewModel = hiltViewModel()
+    viewModel: AddMotorcycleViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val carUiState = viewModel.carUiState
-    val carDetails = carUiState.carDetails
+    val motorcycleUiState = viewModel.motorcycleUiState
+    val motorcycleDetails = motorcycleUiState.motorcycleDetails
     val scrollState = rememberScrollState()
 
     Column {
-        AddVehicleTopBar("Add Car", onBackClick)
+        AddVehicleTopBar("Add Motorcycle", onBackClick)
 //        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
         Column (
             modifier = Modifier
@@ -52,25 +44,25 @@ fun AddCar(
                 .weight(1f)
                 .verticalScroll(scrollState)
         ) {
-            AddVehicleTextField(label = "Name", value = carDetails.name, onValueChange = { viewModel.updateUiState(carDetails.copy(name = it)) })
+            AddVehicleTextField(label = "Name", value = motorcycleDetails.name, onValueChange = { viewModel.updateUiState(motorcycleDetails.copy(name = it)) })
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Year", value = carDetails.year, onValueChange = { viewModel.updateUiState(carDetails.copy(year = it)) }, keyboardType = KeyboardType.Number)
+            AddVehicleTextField(label = "Year", value = motorcycleDetails.year, onValueChange = { viewModel.updateUiState(motorcycleDetails.copy(year = it)) }, keyboardType = KeyboardType.Number)
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Color", value = carDetails.color, onValueChange = { viewModel.updateUiState(carDetails.copy(color = it)) })
+            AddVehicleTextField(label = "Color", value = motorcycleDetails.color, onValueChange = { viewModel.updateUiState(motorcycleDetails.copy(color = it)) })
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Machine", value = carDetails.machine, onValueChange = { viewModel.updateUiState(carDetails.copy(machine = it)) })
+            AddVehicleTextField(label = "Machine", value = motorcycleDetails.machine, onValueChange = { viewModel.updateUiState(motorcycleDetails.copy(machine = it)) })
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Passenger Capacity", value = carDetails.passengerCapacity, onValueChange = { viewModel.updateUiState(carDetails.copy(passengerCapacity = it)) }, keyboardType = KeyboardType.Number)
+            AddVehicleTextField(label = "Suspension", value = motorcycleDetails.suspension, onValueChange = { viewModel.updateUiState(motorcycleDetails.copy(suspension = it)) }, keyboardType = KeyboardType.Number)
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Type", value = carDetails.type, onValueChange = { viewModel.updateUiState(carDetails.copy(type = it)) })
+            AddVehicleTextField(label = "Transmission", value = motorcycleDetails.transmission, onValueChange = { viewModel.updateUiState(motorcycleDetails.copy(transmission = it)) })
 
             Spacer(modifier = Modifier.padding(16.dp))
-            AddVehicleTextField(label = "Price", value = carDetails.price, onValueChange = { viewModel.updateUiState(carDetails.copy(price = it)) }, keyboardType = KeyboardType.Decimal)
+            AddVehicleTextField(label = "Price", value = motorcycleDetails.price, onValueChange = { viewModel.updateUiState(motorcycleDetails.copy(price = it)) }, keyboardType = KeyboardType.Decimal)
 
             Spacer(modifier = Modifier.padding(16.dp))
             Text(text = "Current Stocks", style = MaterialTheme.typography.titleMedium)
@@ -79,8 +71,8 @@ fun AddCar(
                 verticalAlignment = Alignment.CenterVertically,
             ){
                 TextField(
-                    value = carDetails.stocks,
-                    onValueChange = { viewModel.updateUiState(carDetails.copy(stocks = it)) },
+                    value = motorcycleDetails.stocks,
+                    onValueChange = { viewModel.updateUiState(motorcycleDetails.copy(stocks = it)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.wrapContentWidth()
                 )
@@ -95,16 +87,16 @@ fun AddCar(
         Button(
             onClick = {
                 coroutineScope.launch {
-                    viewModel.addCar()
+                    viewModel.addMotorcycle()
                     navigateBack()
                 }
             },
-            enabled = carUiState.isEntryValid,
+            enabled = motorcycleUiState.isEntryValid,
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = "Add Car")
+            Text(text = "Add Motorcycle")
         }
     }
 }

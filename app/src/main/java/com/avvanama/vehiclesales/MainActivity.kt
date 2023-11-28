@@ -24,6 +24,7 @@ import com.avvanama.vehiclesales.ui.HomeTabs
 import com.avvanama.vehiclesales.ui.home
 import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 import com.avvanama.vehiclesales.ui.vehicle.AddCar
+import com.avvanama.vehiclesales.ui.vehicle.AddMotorcycle
 import com.avvanama.vehiclesales.ui.vehicle.Vehicle
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +50,7 @@ fun VehicleSalesApp() {
             vehicleSalesNavGraph(
                 upPress = vehicleSalesNavController::upPress,
                 navigateToAddCar = vehicleSalesNavController::navigateToAddCar,
+                navigateToAddMotorcycle = vehicleSalesNavController::navigateToAddMotorcycle,
                 navigateBack = vehicleSalesNavController::navigateBack,
             )
         }
@@ -58,6 +60,7 @@ fun VehicleSalesApp() {
 private fun NavGraphBuilder.vehicleSalesNavGraph(
     upPress: () -> Unit,
     navigateToAddCar: () -> Unit,
+    navigateToAddMotorcycle: () -> Unit,
     navigateBack: () -> Unit,
 ) {
     navigation(
@@ -66,10 +69,14 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
     ) {
         home(
             navigateToAddCar = navigateToAddCar,
+            navigateToAddMotorcycle = navigateToAddMotorcycle,
             onVehicleSelected = { TODO() }
         )
     }
     composable(MainDestinations.ADD_CAR) {
         AddCar(navigateBack, upPress)
+    }
+    composable(MainDestinations.ADD_MOTORCYCLE) {
+        AddMotorcycle(navigateBack, upPress)
     }
 }

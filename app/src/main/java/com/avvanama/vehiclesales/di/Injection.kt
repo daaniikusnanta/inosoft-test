@@ -6,6 +6,7 @@ import com.avvanama.vehiclesales.database.VehicleDao
 import com.avvanama.vehiclesales.database.VehicleDatabase
 import com.avvanama.vehiclesales.database.VehicleRepository
 import com.avvanama.vehiclesales.ui.vehicle.AddCarViewModel
+import com.avvanama.vehiclesales.ui.vehicle.AddMotorcycleViewModel
 import com.avvanama.vehiclesales.ui.vehicle.VehicleViewModel
 import dagger.Module
 import dagger.Provides
@@ -33,5 +34,11 @@ object AppModule {
     @Singleton
     fun provideAddCarViewModel(vehicleRepository: VehicleRepository): AddCarViewModel {
         return AddCarViewModel(vehicleRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddMotorcycleViewModel(vehicleRepository: VehicleRepository): AddMotorcycleViewModel {
+        return AddMotorcycleViewModel(vehicleRepository)
     }
 }

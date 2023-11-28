@@ -19,10 +19,11 @@ import com.avvanama.vehiclesales.ui.vehicle.Vehicle
 
 fun NavGraphBuilder.home(
     navigateToAddCar: () -> Unit,
+    navigateToAddMotorcycle: () -> Unit,
     onVehicleSelected: (Vehicle) -> Unit,
 ) {
     composable(HomeTabs.VEHICLE.route) { from ->
-        Vehicle(onVehicleSelected = onVehicleSelected, navigateToAddCar = navigateToAddCar)
+        Vehicle(onVehicleSelected = onVehicleSelected, navigateToAddCar = navigateToAddCar, navigateToAddMotorcycle = navigateToAddMotorcycle)
     }
     composable(HomeTabs.SALES.route) { from ->
         TODO()

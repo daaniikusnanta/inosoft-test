@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 object MainDestinations {
     const val HOME_ROUTE = "home"
     const val ADD_CAR = "add_car"
+    const val ADD_MOTORCYCLE = "add_motorcycle"
 }
 
 @Composable
@@ -40,5 +41,9 @@ class VehicleSalesNavController(
 
     fun navigateToAddCar() {
         navController.navigate(MainDestinations.ADD_CAR)
+    }
+
+    fun navigateToAddMotorcycle() {
+        navController.navigate(MainDestinations.ADD_MOTORCYCLE)
     }
 }
