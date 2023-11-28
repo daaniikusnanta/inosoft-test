@@ -21,6 +21,7 @@ import com.avvanama.vehiclesales.ui.sales.AddSalesViewModel
 import com.avvanama.vehiclesales.ui.sales.SalesViewModel
 import com.avvanama.vehiclesales.ui.vehicle.AddCarViewModel
 import com.avvanama.vehiclesales.ui.vehicle.AddMotorcycleViewModel
+import com.avvanama.vehiclesales.ui.vehicle.EditVehicleViewModel
 import com.avvanama.vehiclesales.ui.vehicle.VehicleDetailsViewModel
 import com.avvanama.vehiclesales.ui.vehicle.VehicleViewModel
 import dagger.Module
@@ -73,6 +74,12 @@ object AppViewModelProvider {
         }
         initializer {
             ReportDetailsViewModel(
+                this.createSavedStateHandle(),
+                vehicleSalesApplication().container.vehicleRepository
+            )
+        }
+        initializer {
+            EditVehicleViewModel(
                 this.createSavedStateHandle(),
                 vehicleSalesApplication().container.vehicleRepository
             )

@@ -39,6 +39,12 @@ interface VehicleDao {
         insertMotorcycle(motorcycle)
     }
 
+    @Update
+    suspend fun updateCar(car: Car, vehicle: Vehicle)
+
+    @Update
+    suspend fun updateMotorcycle(motorcycle: Motorcycle, vehicle: Vehicle)
+
     @Query("SELECT * FROM vehicle")
     fun getAllVehicles(): Flow<List<Vehicle>>
 

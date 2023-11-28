@@ -64,4 +64,14 @@ class VehicleRepository (private val vehicleDao: VehicleDao) {
     suspend fun deleteCar(id: Int) = vehicleDao.deleteCar(id)
 
     suspend fun deleteMotorcycle(id: Int) = vehicleDao.deleteMotorcycle(id)
+
+    suspend fun updateCar(car: Car) {
+        val vehicle = car as Vehicle
+        vehicleDao.updateCar(car, vehicle)
+    }
+
+    suspend fun updateMotorcycle(motorcycle: Motorcycle) {
+        val vehicle = motorcycle as Vehicle
+        vehicleDao.updateMotorcycle(motorcycle, vehicle)
+    }
 }

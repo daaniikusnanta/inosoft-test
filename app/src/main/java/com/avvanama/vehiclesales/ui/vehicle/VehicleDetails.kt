@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun VehicleDetails(
     onBackClick: () -> Unit,
+    navigateToEditVehicle: (Int, VehicleType) -> Unit,
     viewModel: VehicleDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState = viewModel.uiState.collectAsState()
@@ -50,7 +51,12 @@ fun VehicleDetails(
                         viewModel.deleteVehicle()
                         onBackClick()
                     } },
-                    onEditButtonClicked = { /*TODO*/ },
+                    onEditButtonClicked = {
+                        if (uiState.value.vehicleType == VehicleType.CAR) {
+                            navigateToEditVehicle(uiState.value.vehicleDetails.carDetails.id, VehicleType.CAR)
+                        } else {
+                            navigateToEditVehicle(uiState.value.vehicleDetails.carDetails.id, VehicleType.CAR)
+                        }},
                     onAddStocksButtonClicked = { /*TODO*/ },
                     modifier = Modifier
                 )
@@ -71,10 +77,10 @@ fun VehicleDetailsButtons(
             Button(onClick = onDeleteButtonClicked, modifier = Modifier.weight(1f)) {
                 Text(text = "Delete")
             }
-//            Spacer(modifier = Modifier.padding(8.dp))
-//            Button(onClick = onEditButtonClicked, modifier = Modifier.weight(1f)) {
-//                Text(text = "Edit")
-//            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            Button(onClick = onEditButtonClicked, modifier = Modifier.weight(1f)) {
+                Text(text = "Edit")
+            }
 
         }
 //        Spacer(modifier = Modifier.padding(8.dp))
@@ -105,6 +111,8 @@ fun VehicleDetailsBody(
             DetailField(label = "Passenger Capacity", value = vehicle.passengerCapacity)
             Spacer(modifier = Modifier.padding(8.dp))
             DetailField(label = "Type", value = vehicle.type)
+            Spacer(modifier = Modifier.padding(8.dp))
+            DetailField(label = "Current Stock", value = vehicle.stocks)
         } else {
             val vehicle = uiState.vehicleDetails.motorcycleDetails
             DetailField(label = "Name", value = vehicle.name)
@@ -120,6 +128,8 @@ fun VehicleDetailsBody(
             DetailField(label = "Suspension", value = vehicle.suspension)
             Spacer(modifier = Modifier.padding(8.dp))
             DetailField(label = "Transmission", value = vehicle.transmission)
+            Spacer(modifier = Modifier.padding(8.dp))
+            DetailField(label = "Current Stock", value = vehicle.stocks)
         }
     }
 }

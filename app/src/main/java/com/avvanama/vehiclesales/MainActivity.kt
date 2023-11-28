@@ -29,6 +29,7 @@ import com.avvanama.vehiclesales.ui.sales.AddSales
 import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 import com.avvanama.vehiclesales.ui.vehicle.AddCar
 import com.avvanama.vehiclesales.ui.vehicle.AddMotorcycle
+import com.avvanama.vehiclesales.ui.vehicle.EditVehicle
 import com.avvanama.vehiclesales.ui.vehicle.Vehicle
 import com.avvanama.vehiclesales.ui.vehicle.VehicleDetails
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,6 +59,7 @@ fun VehicleSalesApp() {
                 navigateToVehicleDetails = vehicleSalesNavController::navigateToVehicleDetails,
                 navigateToAddSales = vehicleSalesNavController::navigateToAddSales,
                 navigateToReportDetails = vehicleSalesNavController::navigateToReportDetails,
+                navigateToEditVehicle = vehicleSalesNavController::navigateToEditVehicle,
                 navigateToBottomBarRoute = vehicleSalesNavController::navigateToBottomBarRoute,
                 navigateBack = vehicleSalesNavController::navigateBack,
             )
@@ -72,6 +74,7 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
     navigateToVehicleDetails: (Int, VehicleType) -> Unit,
     navigateToAddSales: (Int, VehicleType) -> Unit,
     navigateToReportDetails: (Int, VehicleType) -> Unit,
+    navigateToEditVehicle: (Int, VehicleType) -> Unit,
     navigateToBottomBarRoute: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
@@ -105,7 +108,7 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
             }
         )
     ) {
-        VehicleDetails(upPress)
+        VehicleDetails(upPress, navigateToEditVehicle = navigateToEditVehicle)
     }
     composable(
         route = MainDestinations.ADD_SALES_ARG,
@@ -132,5 +135,18 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
         )
     ) {
         ReportDetails(onBackClick = upPress, navigateBack = navigateBack)
+    }
+    composable(
+        route = MainDestinations.EDIT_VEHICLE_ARG,
+        arguments = listOf(
+            navArgument(Arguments.VEHICLE_ID) {
+                type = NavType.IntType
+            },
+            navArgument(Arguments.VEHICLE_TYPE) {
+                type = NavType.EnumType(VehicleType::class.java)
+            }
+        )
+    ) {
+        EditVehicle(onBackClick = upPress, navigateBack = navigateBack)
     }
 }

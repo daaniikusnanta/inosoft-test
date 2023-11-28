@@ -23,6 +23,8 @@ object MainDestinations {
     const val ADD_SALES_ARG = "${ADD_SALES}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
     const val REPORT_DETAILS = "report_details"
     const val REPORT_DETAILS_ARG = "${REPORT_DETAILS}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
+    const val EDIT_VEHICLE = "edit_vehicle"
+    const val EDIT_VEHICLE_ARG = "${EDIT_VEHICLE}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
 }
 
 object Arguments {
@@ -73,6 +75,11 @@ class VehicleSalesNavController(
     fun navigateToReportDetails(vehicleId: Int, vehicleType: VehicleType) {
         Log.d("navigateToReportDetails", "${MainDestinations.REPORT_DETAILS}/${vehicleId}/${vehicleType.name}")
         navController.navigate("${MainDestinations.REPORT_DETAILS}/${vehicleId}/${vehicleType.name}")
+    }
+
+    fun navigateToEditVehicle(vehicleId: Int, vehicleType: VehicleType) {
+        Log.d("navigateToEditVehicle", "${MainDestinations.EDIT_VEHICLE}/${vehicleId}/${vehicleType.name}")
+        navController.navigate("${MainDestinations.EDIT_VEHICLE}/${vehicleId}/${vehicleType.name}")
     }
 
     fun navigateToBottomBarRoute(route: String) {

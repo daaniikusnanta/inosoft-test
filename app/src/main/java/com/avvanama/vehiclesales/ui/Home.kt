@@ -38,7 +38,11 @@ fun NavGraphBuilder.home(
     navigateToBottomBarRoute: (String) -> Unit
 ) {
     composable(HomeTabs.VEHICLE.route) { from ->
-        Vehicle(onVehicleSelected = navigateToVehicleDetails, navigateToAddCar = navigateToAddCar, navigateToAddMotorcycle = navigateToAddMotorcycle, onNavigateToRoute = navigateToBottomBarRoute)
+        Vehicle(
+            onVehicleSelected = navigateToVehicleDetails,
+            navigateToAddCar = navigateToAddCar,
+            navigateToAddMotorcycle = navigateToAddMotorcycle,
+            onNavigateToRoute = navigateToBottomBarRoute)
     }
     composable(HomeTabs.SALES.route) { from ->
         Sales(onVehicleSelected = navigateToAddSales, onNavigateToRoute = navigateToBottomBarRoute)
