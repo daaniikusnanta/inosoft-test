@@ -1,5 +1,6 @@
 package com.avvanama.vehiclesales.ui.vehicle
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +40,9 @@ fun AddCar(
     val carDetails = carUiState.carDetails
     val scrollState = rememberScrollState()
 
-    Column {
+    Column (
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+    ) {
         BackButtonTopBar("Add Car", onBackClick)
 //        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
         Column (

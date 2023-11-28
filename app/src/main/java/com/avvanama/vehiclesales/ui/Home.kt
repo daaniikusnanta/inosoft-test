@@ -16,6 +16,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -49,12 +50,12 @@ fun NavGraphBuilder.home(
 
 enum class HomeTabs(
     @StringRes val title: Int,
-    val icon: ImageVector,
+    val icon: Int,
     val route: String
 ) {
-    VEHICLE(R.string.vehicle, Icons.Rounded.Warning, HomeDestinations.VEHICLE_ROUTE),
-    SALES(R.string.sales, Icons.Rounded.Warning, HomeDestinations.SALES_ROUTE),
-    REPORT(R.string.report, Icons.Rounded.Warning, HomeDestinations.REPORT_ROUTE)
+    VEHICLE(R.string.vehicle, R.drawable.round_directions_car_24, HomeDestinations.VEHICLE_ROUTE),
+    SALES(R.string.sales, R.drawable.round_sell_24, HomeDestinations.SALES_ROUTE),
+    REPORT(R.string.report, R.drawable.baseline_article_24, HomeDestinations.REPORT_ROUTE)
 }
 
 private object HomeDestinations {
@@ -78,7 +79,7 @@ fun VehicleSalesBottomBar(
             index, route ->
             val tab = tabs[index]
             NavigationBarItem(
-                icon = { Icon(tab.icon, stringResource(tab.title)) },
+                icon = { Icon(painterResource(id = tab.icon), stringResource(tab.title)) },
                 label = { Text(stringResource(tab.title)) },
                 selected = currentSection == tab,
                 onClick = { navigateToRoute(route) }

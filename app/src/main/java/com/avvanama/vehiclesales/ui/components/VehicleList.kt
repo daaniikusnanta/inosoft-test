@@ -1,8 +1,6 @@
-package com.avvanama.vehiclesales.ui.reports
+package com.avvanama.vehiclesales.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,86 +24,43 @@ import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Warning
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.avvanama.vehiclesales.database.Sales
+import com.avvanama.vehiclesales.R
+import com.avvanama.vehiclesales.database.Car
 import com.avvanama.vehiclesales.database.Vehicle
 import com.avvanama.vehiclesales.database.VehicleType
-import com.avvanama.vehiclesales.di.AppViewModelProvider
-import com.avvanama.vehiclesales.ui.components.AddVehicleTextField
-import com.avvanama.vehiclesales.ui.components.BackButtonTopBar
-import com.avvanama.vehiclesales.ui.sales.AddSalesViewModel
-import com.avvanama.vehiclesales.ui.vehicle.toVehicleDetailsCommon
-import kotlinx.coroutines.launch
+import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 
 @Composable
-fun ReportDetails(
-    onBackClick: () -> Unit,
-    navigateBack: () -> Unit,
-    viewModel: ReportDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
-) {
-    val salesUiState = viewModel.salesUiState.collectAsState()
-    val salesDetails = salesUiState.value
-    val uiState = viewModel.uiState.collectAsState()
-
-    Column (
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-    ) {
-        BackButtonTopBar("Add Sales", onBackClick)
-//        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
-        Column (
-            modifier = Modifier
-                .padding(16.dp)
-        ) {
-            val vehicleDetails =
-                if (uiState.value.vehicleType == VehicleType.CAR) uiState.value.vehicleDetails.carDetails.toVehicleDetailsCommon()
-                else uiState.value.vehicleDetails.motorcycleDetails.toVehicleDetailsCommon()
-
-            Text(text = vehicleDetails.name,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.padding(4.dp))
-            Text(text = "${vehicleDetails.stocks} in stock",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.wrapContentWidth()
-            )
-            Spacer(modifier = Modifier.padding(8.dp))
-
-            ReportList(salesList = salesDetails.salesList)
-        }
-    }
-}
-
-@Composable
-fun ReportList(
-    salesList: List<Sales>,
+fun VehicleList(
+    vehicles: List<Vehicle>,
+    onVehicleSelected: (Int, VehicleType) -> Unit,
     modifier: Modifier = Modifier,
+    actionDescription: String
 ) {
     Column (
         modifier = modifier
     ) {
-        Text(text = "Reports", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp))
+        Text(text = "Vehicles", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
 
-        if (salesList.isNotEmpty()) {
+        if (vehicles.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier.padding(vertical = 8.dp)
             ) {
                 item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
-                items(items = salesList, key = { it.id }) { sales ->
+                items(items = vehicles, key = { it.id }) { vehicle ->
                     Spacer(modifier = Modifier.height(8.dp))
-                    ReportItem(sales = sales)
+                    VehicleItem(vehicle = vehicle, onVehicleSelected = onVehicleSelected, actionDescription = actionDescription)
                 }
             }
         } else {
@@ -125,27 +80,28 @@ fun ReportList(
                         .padding(16.dp)
                 )
                 Text(
-                    text = "No sales found",
+                    text = "No vehicles found",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(16.dp)
                 )
             }
         }
     }
+
 }
 
-
-
-
 @Composable
-fun ReportItem(
-    sales: Sales,
+fun VehicleItem(
+    vehicle: Vehicle,
+    actionDescription: String = "See Details",
+    onVehicleSelected: (Int, VehicleType) -> Unit,
 ) {
     Surface(
         modifier = Modifier
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .clickable { onVehicleSelected(vehicle.id, vehicle.vehicleType) },
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.primaryContainer
+        color = MaterialTheme.colorScheme.primaryContainer,
     ) {
         Row(
             modifier = Modifier
@@ -154,6 +110,11 @@ fun ReportItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                if (vehicle.vehicleType == VehicleType.CAR) painterResource(R.drawable.round_directions_car_24)
+                else painterResource(R.drawable.round_two_wheeler_24),
+                contentDescription = ""
+            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -162,22 +123,64 @@ fun ReportItem(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "${sales.quantity} units",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = vehicle.name,
+                    style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = sales.date,
+                    text = "${vehicle.year} - ${vehicle.color}",
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1
                 )
             }
-            Text(
-                text = sales.totalPrice.toString(),
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelLarge
-            )
+            Column(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "${vehicle.stocks} in stock",
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                )
+                Row (
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f),
+                ) {
+                    Text(
+                        text = actionDescription,
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 1,
+                    )
+                    Icon(
+                        Icons.Rounded.KeyboardArrowRight,
+                        contentDescription = null,
+                    )
+                }
+            }
         }
+    }
+}
+
+@Preview
+@Composable
+fun VehicleItemPreview() {
+    VehicleSalesTheme {
+        val car = Car(
+            "Gas",
+            4,
+            "Gasoline"
+        ).apply {
+            name = "Toyota Supra"
+            color = "White"
+            year = 1998
+            price = 500000000.0
+        }
+        VehicleItem(vehicle = car, onVehicleSelected = { _, _ -> })
     }
 }

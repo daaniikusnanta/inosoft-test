@@ -29,7 +29,10 @@ class AddCarViewModel (private val vehicleRepository: VehicleRepository): ViewMo
 
     private fun validateInput(uiState: CarDetails = carUiState.carDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && price.isNotBlank() && stocks.isNotBlank()
+            name.isNotBlank() && color.isNotBlank() && year.isNotBlank()
+                    && machine.isNotBlank() && price.isNotBlank()
+                    && stocks.isNotBlank() && passengerCapacity.isNotBlank()
+                    && type.isNotBlank()
         }
     }
     suspend fun addCar() {

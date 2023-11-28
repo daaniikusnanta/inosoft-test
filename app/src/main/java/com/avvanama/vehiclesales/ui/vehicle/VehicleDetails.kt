@@ -1,6 +1,7 @@
 package com.avvanama.vehiclesales.ui.vehicle
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,19 +32,23 @@ fun VehicleDetails(
     val uiState = viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    Column (modifier = Modifier.padding(16.dp)) {
+    Column (
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+    ) {
         BackButtonTopBar (
             title = "Vehicle Details",
             onBackClick = onBackClick
         )
-        VehicleDetailsBody(uiState = uiState.value)
-        Spacer(modifier = Modifier.padding(16.dp))
-        VehicleDetailsButtons(
-            onDeleteButtonClicked = { coroutineScope.launch { viewModel.deleteVehicle() } },
-            onEditButtonClicked = { /*TODO*/ },
-            onAddStocksButtonClicked = { /*TODO*/ },
-            modifier = Modifier
-        )
+        Column (modifier = Modifier.padding(16.dp)) {
+            VehicleDetailsBody(uiState = uiState.value)
+            Spacer(modifier = Modifier.padding(16.dp))
+            VehicleDetailsButtons(
+                onDeleteButtonClicked = { coroutineScope.launch { viewModel.deleteVehicle() } },
+                onEditButtonClicked = { /*TODO*/ },
+                onAddStocksButtonClicked = { /*TODO*/ },
+                modifier = Modifier
+            )
+        }
     }
 }
 
@@ -54,18 +59,21 @@ fun VehicleDetailsButtons(
     onAddStocksButtonClicked: () -> Unit,
     modifier: Modifier
 ) {
-    Row (modifier = modifier) {
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
-            Text(text = "Delete")
+    Column (modifier = modifier) {
+        Row (modifier = modifier) {
+            Button(onClick = onDeleteButtonClicked, modifier = Modifier.weight(1f)) {
+                Text(text = "Delete")
+            }
+//            Spacer(modifier = Modifier.padding(8.dp))
+//            Button(onClick = onEditButtonClicked, modifier = Modifier.weight(1f)) {
+//                Text(text = "Edit")
+//            }
+
         }
-        Spacer(modifier = Modifier.padding(8.dp))
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
-            Text(text = "Edit")
-        }
-        Spacer(modifier = Modifier.padding(8.dp))
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
-            Text(text = "Add Stocks")
-        }
+//        Spacer(modifier = Modifier.padding(8.dp))
+//        Button(onClick = onAddStocksButtonClicked, modifier = Modifier.weight(1f)) {
+//            Text(text = "Add Stocks")
+//        }
     }
 }
 

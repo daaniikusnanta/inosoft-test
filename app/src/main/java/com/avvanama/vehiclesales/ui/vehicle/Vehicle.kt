@@ -2,16 +2,20 @@ package com.avvanama.vehiclesales.ui.vehicle
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -26,12 +30,14 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -43,6 +49,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,6 +58,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.avvanama.vehiclesales.R
 import com.avvanama.vehiclesales.database.Car
 import com.avvanama.vehiclesales.database.Motorcycle
 import com.avvanama.vehiclesales.database.Vehicle
@@ -60,6 +68,7 @@ import com.avvanama.vehiclesales.database.VehicleType
 import com.avvanama.vehiclesales.di.AppViewModelProvider
 import com.avvanama.vehiclesales.ui.HomeTabs
 import com.avvanama.vehiclesales.ui.VehicleSalesBottomBar
+import com.avvanama.vehiclesales.ui.components.VehicleList
 import com.avvanama.vehiclesales.ui.components.VehicleSalesTopAppBar
 import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 
@@ -96,7 +105,7 @@ fun Vehicle(
                 navigateToAddMotorcycle = navigateToAddMotorcycle,
                 modifier = Modifier.padding(top = 8.dp)
             )
-            VehicleList(vehicles = vehicles, onVehicleSelected = onVehicleSelected, modifier = Modifier)
+            VehicleList(vehicles = vehicles, onVehicleSelected = onVehicleSelected, modifier = Modifier, actionDescription = "Manage Details")
         }
     }
 }
@@ -107,152 +116,23 @@ fun AddVehicleButton(
     navigateToAddMotorcycle: () -> Unit,
     modifier: Modifier
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier.padding(8.dp)) {
         Button(
             onClick = navigateToAddCar,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(8.dp)
         ) {
-            Text(text = "Add Car")
+            Icon(painterResource(id = R.drawable.round_directions_car_24), "")
+            Text(text = "Add Car", modifier = Modifier.padding(start = 8.dp))
         }
         Spacer(modifier = Modifier.padding(8.dp))
         Button(
             onClick = navigateToAddMotorcycle,
             modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Add Motorcycle")
+            Icon(painterResource(id = R.drawable.round_two_wheeler_24), "")
+            Text(text = "Add Motorcycle", modifier = Modifier.padding(start = 8.dp))
         }
-    }
-}
-
-@Composable
-fun VehicleList(
-    vehicles: List<Vehicle>,
-    onVehicleSelected: (Int, VehicleType) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column (
-        modifier = modifier
-    ) {
-        Text(text = "Vehicles", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
-        
-        if (vehicles.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier.padding(vertical = 8.dp)
-            ) {
-                item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
-                items(items = vehicles, key = { it.id }) { vehicle ->
-                    Spacer(modifier = Modifier.height(8.dp))
-                    VehicleItem(vehicle = vehicle, onVehicleSelected = onVehicleSelected)
-                }
-            }
-        } else {
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    Icons.Rounded.Warning,
-                    contentDescription = "Account",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-                Text(
-                    text = "No vehicles found",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-        }
-    }
-    
-}
-
-@Composable
-fun VehicleItem(
-    vehicle: Vehicle,
-    onVehicleSelected: (Int, VehicleType) -> Unit,
-) {
-    Surface(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .clickable { onVehicleSelected(vehicle.id, vehicle.vehicleType) },
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.primaryContainer,
-    ) {
-        Row(
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .padding(8.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                if (vehicle.vehicleType == VehicleType.CAR) Icons.Outlined.Star else Icons.Outlined.Build,
-                contentDescription = ""
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(start = 8.dp)
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = vehicle.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = vehicle.year.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .fillMaxHeight(),
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "${vehicle.year} left",
-                    style = MaterialTheme.typography.labelLarge,
-                    maxLines = 1,
-                )
-                Icon(
-                    Icons.Rounded.KeyboardArrowRight,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f),
-                    contentDescription = null,
-                )
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun VehicleItemPreview() {
-    VehicleSalesTheme {
-        val car = Car(
-            "Gas",
-            4,
-            "Gasoline"
-        ).apply {
-            name = "Toyota Supra"
-            color = "White"
-            year = 1998
-            price = 500000000.0
-        }
-        VehicleItem(vehicle = car, onVehicleSelected = { _, _ -> })
     }
 }
 

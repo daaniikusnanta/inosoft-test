@@ -43,6 +43,7 @@ import com.avvanama.vehiclesales.database.VehicleType
 import com.avvanama.vehiclesales.di.AppViewModelProvider
 import com.avvanama.vehiclesales.ui.HomeTabs
 import com.avvanama.vehiclesales.ui.VehicleSalesBottomBar
+import com.avvanama.vehiclesales.ui.components.VehicleList
 import com.avvanama.vehiclesales.ui.components.VehicleSalesTopAppBar
 import com.avvanama.vehiclesales.ui.sales.SalesViewModel
 
@@ -70,126 +71,7 @@ fun Report(
         modifier = modifier
     ) {
         Column (modifier = Modifier.padding(it)) {
-            VehicleList(vehicles = vehicles, onVehicleSelected = onVehicleSelected, modifier = Modifier)
-        }
-    }
-}
-
-@Composable
-fun VehicleList(
-    vehicles: List<Vehicle>,
-    onVehicleSelected: (Int, VehicleType) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column (
-        modifier = modifier
-    ) {
-        Text(text = "Vehicles", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
-
-        if (vehicles.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier.padding(vertical = 8.dp)
-            ) {
-                item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
-                items(items = vehicles, key = { it.id }) { vehicle ->
-                    Spacer(modifier = Modifier.height(8.dp))
-                    SalesItem(vehicle = vehicle, onVehicleSelected = onVehicleSelected)
-                }
-            }
-        } else {
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    Icons.Rounded.Warning,
-                    contentDescription = "Account",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-                Text(
-                    text = "No vehicles found",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-        }
-    }
-}
-
-
-
-
-@Composable
-fun SalesItem(
-    vehicle: Vehicle,
-    onVehicleSelected: (Int, VehicleType) -> Unit,
-) {
-    Surface(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .clickable {
-                if (vehicle.stocks > 0) onVehicleSelected(vehicle.id, vehicle.vehicleType)
-                else Log.d("SalesItem", "No stocks left")
-            },
-        shape = MaterialTheme.shapes.medium,
-        color = if (vehicle.stocks > 0) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
-    ) {
-        Row(
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .padding(8.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                if (vehicle.vehicleType == VehicleType.CAR) Icons.Outlined.Star else Icons.Outlined.Build,
-                contentDescription = ""
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(start = 8.dp)
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = vehicle.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = vehicle.year.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .fillMaxHeight(),
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "${vehicle.stocks} left",
-                    style = MaterialTheme.typography.labelLarge,
-                    maxLines = 1,
-                )
-                Icon(
-                    Icons.Rounded.KeyboardArrowRight,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f),
-                    contentDescription = null,
-                )
-            }
+            VehicleList(vehicles = vehicles, onVehicleSelected = onVehicleSelected, modifier = Modifier, actionDescription = "See Report")
         }
     }
 }

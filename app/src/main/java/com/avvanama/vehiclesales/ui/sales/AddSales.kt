@@ -1,5 +1,6 @@
 package com.avvanama.vehiclesales.ui.sales
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,10 +42,12 @@ fun AddSales(
     val scrollState = rememberScrollState()
     val uiState = viewModel.uiState.collectAsState()
 
-    Column {
+    Column (
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+    ) {
         BackButtonTopBar("Add Sales", onBackClick)
 //        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
-        Column (
+        Column  (
             modifier = Modifier
                 .padding(16.dp)
                 .weight(1f)

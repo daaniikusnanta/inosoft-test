@@ -77,7 +77,7 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
-        startDestination = HomeTabs.REPORT.route,
+        startDestination = HomeTabs.VEHICLE.route,
     ) {
         home(
             navigateToAddCar = navigateToAddCar,

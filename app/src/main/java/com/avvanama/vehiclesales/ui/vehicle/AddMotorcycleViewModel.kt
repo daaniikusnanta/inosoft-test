@@ -22,7 +22,10 @@ class AddMotorcycleViewModel (private val vehicleRepository: VehicleRepository):
 
     private fun validateInput(uiState: MotorcycleDetails = motorcycleUiState.motorcycleDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && price.isNotBlank() && stocks.isNotBlank()
+            name.isNotBlank() && color.isNotBlank() && year.isNotBlank()
+                    && machine.isNotBlank() && price.isNotBlank()
+                    && stocks.isNotBlank() && transmission.isNotBlank()
+                    && suspension.isNotBlank()
         }
     }
     suspend fun addMotorcycle() {
