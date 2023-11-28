@@ -43,11 +43,11 @@ class AddSalesViewModel (
     private val vehicleType: VehicleType = savedStateHandle.get<VehicleType>(Arguments.VEHICLE_TYPE)
         ?: throw IllegalArgumentException("Vehicle Type not found in arguments")
 
-
     val uiState: StateFlow<VehicleDetailsUiState> =
         vehicleRepository.getVehicleDetails(vehicleId, vehicleType)
             .filterNotNull()
             .map {
+                Log.d("addSalesViewModel", "$vehicleId, ${it.vehicleType.toString()}")
                 if (it.vehicleType == VehicleType.CAR) {
                     VehicleDetailsUiState (
                         vehicleDetails = VehicleDetails(carDetails = (it as Car).toCarDetails()),

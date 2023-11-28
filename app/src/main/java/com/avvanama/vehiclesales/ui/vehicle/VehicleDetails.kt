@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,22 +33,28 @@ fun VehicleDetails(
     val uiState = viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    Column (
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-    ) {
-        BackButtonTopBar (
+    Scaffold (
+        topBar = { BackButtonTopBar (
             title = "Vehicle Details",
             onBackClick = onBackClick
-        )
-        Column (modifier = Modifier.padding(16.dp)) {
-            VehicleDetailsBody(uiState = uiState.value)
-            Spacer(modifier = Modifier.padding(16.dp))
-            VehicleDetailsButtons(
-                onDeleteButtonClicked = { coroutineScope.launch { viewModel.deleteVehicle() } },
-                onEditButtonClicked = { /*TODO*/ },
-                onAddStocksButtonClicked = { /*TODO*/ },
-                modifier = Modifier
-            )
+        ) }
+    ) {
+        Column (
+            modifier = Modifier.padding(it)
+        ) {
+            Column (modifier = Modifier.padding(16.dp)) {
+                VehicleDetailsBody(uiState = uiState.value)
+                Spacer(modifier = Modifier.padding(16.dp))
+                VehicleDetailsButtons(
+                    onDeleteButtonClicked = { coroutineScope.launch {
+                        viewModel.deleteVehicle()
+                        onBackClick()
+                    } },
+                    onEditButtonClicked = { /*TODO*/ },
+                    onAddStocksButtonClicked = { /*TODO*/ },
+                    modifier = Modifier
+                )
+            }
         }
     }
 }

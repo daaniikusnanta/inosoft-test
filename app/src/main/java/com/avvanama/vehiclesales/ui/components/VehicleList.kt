@@ -166,21 +166,3 @@ fun VehicleItem(
         }
     }
 }
-
-@Preview
-@Composable
-fun VehicleItemPreview() {
-    VehicleSalesTheme {
-        val car = Car(
-            "Gas",
-            4,
-            "Gasoline"
-        ).apply {
-            name = "Toyota Supra"
-            color = "White"
-            year = 1998
-            price = 500000000.0
-        }
-        VehicleItem(vehicle = car, onVehicleSelected = { _, _ -> })
-    }
-}

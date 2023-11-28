@@ -3,6 +3,7 @@ package com.avvanama.vehiclesales.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -14,10 +15,29 @@ interface VehicleDao {
     suspend fun insertSales(sales: Sales)
 
     @Insert
-    suspend fun insertCar(vehicle: Vehicle, car: Car)
+    suspend fun insertVehicle(vehicle: Vehicle): Long
 
     @Insert
-    suspend fun insertMotorcycle(vehicle: Vehicle, motorcycle: Motorcycle)
+    suspend fun insertCar(car: Car)
+
+    @Transaction
+    suspend fun insertCar(car: Car, vehicle: Vehicle) {
+        val vehicleId = insertVehicle(vehicle = vehicle)
+
+        car.id = vehicleId.toInt()
+        insertCar(car)
+    }
+
+    @Insert
+    suspend fun insertMotorcycle(motorcycle: Motorcycle)
+
+    @Transaction
+    suspend fun insertMotorcycle(motorcycle: Motorcycle, vehicle: Vehicle) {
+        val vehicleId = insertVehicle(vehicle = vehicle)
+
+        motorcycle.id = vehicleId.toInt()
+        insertMotorcycle(motorcycle)
+    }
 
     @Query("SELECT * FROM vehicle")
     fun getAllVehicles(): Flow<List<Vehicle>>

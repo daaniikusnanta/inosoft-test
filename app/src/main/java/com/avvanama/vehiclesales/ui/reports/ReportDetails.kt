@@ -29,6 +29,7 @@ import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,30 +61,33 @@ fun ReportDetails(
     val salesDetails = salesUiState.value
     val uiState = viewModel.uiState.collectAsState()
 
-    Column (
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+    Scaffold (
+        topBar = { BackButtonTopBar("Add Sales", onBackClick) }
     ) {
-        BackButtonTopBar("Add Sales", onBackClick)
-//        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
         Column (
-            modifier = Modifier
-                .padding(16.dp)
+            modifier = Modifier.padding(it)
         ) {
-            val vehicleDetails =
-                if (uiState.value.vehicleType == VehicleType.CAR) uiState.value.vehicleDetails.carDetails.toVehicleDetailsCommon()
-                else uiState.value.vehicleDetails.motorcycleDetails.toVehicleDetailsCommon()
+//        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
+            Column (
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                val vehicleDetails =
+                    if (uiState.value.vehicleType == VehicleType.CAR) uiState.value.vehicleDetails.carDetails.toVehicleDetailsCommon()
+                    else uiState.value.vehicleDetails.motorcycleDetails.toVehicleDetailsCommon()
 
-            Text(text = vehicleDetails.name,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.padding(4.dp))
-            Text(text = "${vehicleDetails.stocks} in stock",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.wrapContentWidth()
-            )
-            Spacer(modifier = Modifier.padding(8.dp))
+                Text(text = vehicleDetails.name,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.padding(4.dp))
+                Text(text = "${vehicleDetails.stocks} in stock",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.wrapContentWidth()
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
 
-            ReportList(salesList = salesDetails.salesList)
+                ReportList(salesList = salesDetails.salesList)
+            }
         }
     }
 }
@@ -96,11 +100,11 @@ fun ReportList(
     Column (
         modifier = modifier
     ) {
-        Text(text = "Reports", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp))
+        Text(text = "Sales Report", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp))
 
         if (salesList.isNotEmpty()) {
             LazyColumn(
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 4.dp)
             ) {
                 item { Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)) }
                 items(items = salesList, key = { it.id }) { sales ->
@@ -142,8 +146,6 @@ fun ReportItem(
     sales: Sales,
 ) {
     Surface(
-        modifier = Modifier
-            .padding(horizontal = 8.dp),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.primaryContainer
     ) {
@@ -173,11 +175,18 @@ fun ReportItem(
                     maxLines = 1
                 )
             }
-            Text(
-                text = sales.totalPrice.toString(),
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelLarge
-            )
+            Column (
+                modifier = Modifier.weight(0.5f)
+            ) {
+                Text(
+                    text = "Total Sales",
+                    style = MaterialTheme.typography.labelMedium
+                )
+                Text(
+                    text = sales.totalPrice.toString(),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
     }
 }
