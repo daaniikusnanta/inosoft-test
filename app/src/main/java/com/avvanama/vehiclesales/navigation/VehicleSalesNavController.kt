@@ -21,12 +21,13 @@ object MainDestinations {
     const val VEHICLE_DETAILS_ARG = "${VEHICLE_DETAILS}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
     const val ADD_SALES = "add_sales"
     const val ADD_SALES_ARG = "${ADD_SALES}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
+    const val REPORT_DETAILS = "report_details"
+    const val REPORT_DETAILS_ARG = "${REPORT_DETAILS}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
 }
 
 object Arguments {
     const val VEHICLE_ID = "vehicleId"
     const val VEHICLE_TYPE = "vehicleType"
-    const val VEHICLE = "vehicle"
 }
 
 @Composable
@@ -68,4 +69,29 @@ class VehicleSalesNavController(
         Log.d("navigateToAddSales", "${MainDestinations.ADD_SALES}/${vehicleId}/${vehicleType.name}")
         navController.navigate("${MainDestinations.ADD_SALES}/${vehicleId}/${vehicleType.name}")
     }
+
+    fun navigateToReportDetails(vehicleId: Int, vehicleType: VehicleType) {
+        Log.d("navigateToReportDetails", "${MainDestinations.REPORT_DETAILS}/${vehicleId}/${vehicleType.name}")
+        navController.navigate("${MainDestinations.REPORT_DETAILS}/${vehicleId}/${vehicleType.name}")
+    }
+
+    fun navigateToBottomBarRoute(route: String) {
+        if (route != currentRoute) {
+            navController.navigate(route) {
+                launchSingleTop = true
+                restoreState = true
+                popUpTo(findStartDestination(navController.graph).id) {
+                    saveState = true
+                }
+            }
+        }
+    }
+
+}
+
+private val NavGraph.startDestination: NavDestination?
+    get() = findNode(startDestinationId)
+
+private tailrec fun findStartDestination(graph: NavDestination): NavDestination {
+    return if (graph is NavGraph) findStartDestination(graph.startDestination!!) else graph
 }

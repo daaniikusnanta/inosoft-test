@@ -24,6 +24,7 @@ import com.avvanama.vehiclesales.navigation.MainDestinations
 import com.avvanama.vehiclesales.navigation.rememberVehicleSalesNavController
 import com.avvanama.vehiclesales.ui.HomeTabs
 import com.avvanama.vehiclesales.ui.home
+import com.avvanama.vehiclesales.ui.reports.ReportDetails
 import com.avvanama.vehiclesales.ui.sales.AddSales
 import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 import com.avvanama.vehiclesales.ui.vehicle.AddCar
@@ -56,6 +57,8 @@ fun VehicleSalesApp() {
                 navigateToAddMotorcycle = vehicleSalesNavController::navigateToAddMotorcycle,
                 navigateToVehicleDetails = vehicleSalesNavController::navigateToVehicleDetails,
                 navigateToAddSales = vehicleSalesNavController::navigateToAddSales,
+                navigateToReportDetails = vehicleSalesNavController::navigateToReportDetails,
+                navigateToBottomBarRoute = vehicleSalesNavController::navigateToBottomBarRoute,
                 navigateBack = vehicleSalesNavController::navigateBack,
             )
         }
@@ -68,17 +71,21 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
     navigateToAddMotorcycle: () -> Unit,
     navigateToVehicleDetails: (Int, VehicleType) -> Unit,
     navigateToAddSales: (Int, VehicleType) -> Unit,
+    navigateToReportDetails: (Int, VehicleType) -> Unit,
+    navigateToBottomBarRoute: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
-        startDestination = HomeTabs.SALES.route,
+        startDestination = HomeTabs.REPORT.route,
     ) {
         home(
             navigateToAddCar = navigateToAddCar,
             navigateToAddMotorcycle = navigateToAddMotorcycle,
             navigateToVehicleDetails = navigateToVehicleDetails,
             navigateToAddSales = navigateToAddSales,
+            navigateToReportDetails = navigateToReportDetails,
+            navigateToBottomBarRoute = navigateToBottomBarRoute
         )
     }
     composable(MainDestinations.ADD_CAR) {
@@ -112,5 +119,18 @@ private fun NavGraphBuilder.vehicleSalesNavGraph(
         )
     ) {
         AddSales(onBackClick = upPress, navigateBack = navigateBack)
+    }
+    composable(
+        route = MainDestinations.REPORT_DETAILS_ARG,
+        arguments = listOf(
+            navArgument(Arguments.VEHICLE_ID) {
+                type = NavType.IntType
+            },
+            navArgument(Arguments.VEHICLE_TYPE) {
+                type = NavType.EnumType(VehicleType::class.java)
+            }
+        )
+    ) {
+        ReportDetails(onBackClick = upPress, navigateBack = navigateBack)
     }
 }

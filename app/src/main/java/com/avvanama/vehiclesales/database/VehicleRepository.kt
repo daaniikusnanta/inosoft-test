@@ -43,6 +43,8 @@ class VehicleRepository (private val vehicleDao: VehicleDao) {
         }
     }
 
+    fun getSales(vehicleId: Int): Flow<List<Sales>> = vehicleDao.getSales(vehicleId)
+
     fun getVehicle(id: Int): Flow<Vehicle> = vehicleDao.getVehicle(id)
 
     fun getVehicleDetails(id: Int, vehicleType: VehicleType): Flow<Vehicle> {
