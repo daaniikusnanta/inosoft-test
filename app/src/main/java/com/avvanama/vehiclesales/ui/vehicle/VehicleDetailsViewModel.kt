@@ -66,3 +66,45 @@ data class VehicleDetails(
     val carDetails: CarDetails = CarDetails(),
     val motorcycleDetails: MotorcycleDetails = MotorcycleDetails(),
 )
+
+data class VehicleDetailsCommon(
+    val id: Int = 0,
+    val name: String = "",
+    val year: String = "",
+    val color: String = "",
+    val price: String = "",
+    val stocks: String = "",
+    val vehicleType: VehicleType = VehicleType.CAR,
+)
+
+fun CarDetails.toVehicleDetailsCommon(): VehicleDetailsCommon {
+    return VehicleDetailsCommon(
+        id = id,
+        name = name,
+        year = year.toString(),
+        color = color,
+        price = price.toString(),
+        stocks = stocks.toString(),
+        vehicleType = vehicleType
+    )
+}
+
+fun MotorcycleDetails.toVehicleDetailsCommon(): VehicleDetailsCommon {
+    return VehicleDetailsCommon(
+        id = id,
+        name = name,
+        year = year.toString(),
+        color = color,
+        price = price.toString(),
+        stocks = stocks.toString(),
+        vehicleType = vehicleType
+    )
+}
+
+fun VehicleDetailsUiState.getVehicleDetailsCommon(): VehicleDetailsCommon {
+    return if (vehicleType == VehicleType.CAR) {
+        vehicleDetails.carDetails.toVehicleDetailsCommon()
+    } else {
+        vehicleDetails.motorcycleDetails.toVehicleDetailsCommon()
+    }
+}

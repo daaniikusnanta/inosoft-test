@@ -2,6 +2,7 @@ package com.avvanama.vehiclesales.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.coroutines.flow.Flow
 
 enum class VehicleType {
     CAR,
@@ -41,3 +42,14 @@ data class Car(
         vehicleType = VehicleType.CAR
     }
 }
+
+@Entity(tableName = "sales")
+data class Sales(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val vehicleId: Int,
+    val vehicleType: VehicleType,
+    val quantity: Int,
+    val totalPrice: Double,
+    val date: String,
+)

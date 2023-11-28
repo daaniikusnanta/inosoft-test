@@ -19,11 +19,14 @@ object MainDestinations {
     const val ADD_MOTORCYCLE = "add_motorcycle"
     const val VEHICLE_DETAILS = "vehicle_details"
     const val VEHICLE_DETAILS_ARG = "${VEHICLE_DETAILS}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
+    const val ADD_SALES = "add_sales"
+    const val ADD_SALES_ARG = "${ADD_SALES}/{${Arguments.VEHICLE_ID}}/{${Arguments.VEHICLE_TYPE}}"
 }
 
 object Arguments {
     const val VEHICLE_ID = "vehicleId"
     const val VEHICLE_TYPE = "vehicleType"
+    const val VEHICLE = "vehicle"
 }
 
 @Composable
@@ -59,5 +62,10 @@ class VehicleSalesNavController(
     fun navigateToVehicleDetails(vehicleId: Int, vehicleType: VehicleType) {
         Log.d("navigateToVehicleDetails", "${MainDestinations.VEHICLE_DETAILS}/${vehicleId}/${vehicleType.name}")
         navController.navigate("${MainDestinations.VEHICLE_DETAILS}/${vehicleId}/${vehicleType.name}")
+    }
+
+    fun navigateToAddSales(vehicleId: Int, vehicleType: VehicleType) {
+        Log.d("navigateToAddSales", "${MainDestinations.ADD_SALES}/${vehicleId}/${vehicleType.name}")
+        navController.navigate("${MainDestinations.ADD_SALES}/${vehicleId}/${vehicleType.name}")
     }
 }

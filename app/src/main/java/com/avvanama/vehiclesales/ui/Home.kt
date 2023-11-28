@@ -16,18 +16,20 @@ import androidx.navigation.compose.composable
 import com.avvanama.vehiclesales.R
 import com.avvanama.vehiclesales.database.Vehicle
 import com.avvanama.vehiclesales.database.VehicleType
+import com.avvanama.vehiclesales.ui.sales.Sales
 import com.avvanama.vehiclesales.ui.vehicle.Vehicle
 
 fun NavGraphBuilder.home(
     navigateToAddCar: () -> Unit,
     navigateToAddMotorcycle: () -> Unit,
-    onVehicleSelected: (Int, VehicleType) -> Unit,
+    navigateToVehicleDetails: (Int, VehicleType) -> Unit,
+    navigateToAddSales: (Int, VehicleType) -> Unit,
 ) {
     composable(HomeTabs.VEHICLE.route) { from ->
-        Vehicle(onVehicleSelected = onVehicleSelected, navigateToAddCar = navigateToAddCar, navigateToAddMotorcycle = navigateToAddMotorcycle)
+        Vehicle(onVehicleSelected = navigateToVehicleDetails, navigateToAddCar = navigateToAddCar, navigateToAddMotorcycle = navigateToAddMotorcycle)
     }
     composable(HomeTabs.SALES.route) { from ->
-        TODO()
+        Sales(onVehicleSelected = navigateToAddSales)
     }
     composable(HomeTabs.REPORT.route) { from ->
         TODO()

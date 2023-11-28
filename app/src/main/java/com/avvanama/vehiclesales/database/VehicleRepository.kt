@@ -6,6 +6,8 @@ import javax.inject.Inject
 
 class VehicleRepository (private val vehicleDao: VehicleDao) {
 
+    suspend fun insertSales(sales: Sales) = vehicleDao.insertSales(sales)
+
     suspend fun insertCar(car: Car) {
         val vehicle = car as Vehicle
         vehicleDao.insertCar(vehicle, car)
@@ -19,6 +21,26 @@ class VehicleRepository (private val vehicleDao: VehicleDao) {
     fun getAllVehicles(): Flow<List<Vehicle>> {
         Log.d("VehicleRepository", "getAllVehicles: ")
         return vehicleDao.getAllVehicles()
+    }
+
+    suspend fun updateCarStocks(id: Int, stocks: Int) {
+        Log.d("VehicleRepository", "updateCarStocks: $id, $stocks")
+        vehicleDao.updateCarStocks(id, stocks)
+    }
+
+    suspend fun updateMotorcycleStocks(id: Int, stocks: Int) {
+        Log.d("VehicleRepository", "updateMotorcycleStocks: $id, $stocks")
+        vehicleDao.updateMotorcycleStocks(id, stocks)
+    }
+
+    suspend fun updateStocks(id: Int, stocks: Int, vehicleType: VehicleType) {
+        Log.d("VehicleRepository", "updateStocks: $id, $stocks")
+        vehicleDao.updateStocks(id, stocks)
+
+        when (vehicleType) {
+            VehicleType.CAR -> updateCarStocks(id, stocks)
+            VehicleType.MOTORCYCLE -> updateMotorcycleStocks(id, stocks)
+        }
     }
 
     fun getVehicle(id: Int): Flow<Vehicle> = vehicleDao.getVehicle(id)

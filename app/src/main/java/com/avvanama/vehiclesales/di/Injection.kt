@@ -15,6 +15,8 @@ import com.avvanama.vehiclesales.database.VehicleDatabase
 import com.avvanama.vehiclesales.database.VehicleRepository
 import com.avvanama.vehiclesales.database.VehicleType
 import com.avvanama.vehiclesales.navigation.Arguments
+import com.avvanama.vehiclesales.ui.sales.AddSalesViewModel
+import com.avvanama.vehiclesales.ui.sales.SalesViewModel
 import com.avvanama.vehiclesales.ui.vehicle.AddCarViewModel
 import com.avvanama.vehiclesales.ui.vehicle.AddMotorcycleViewModel
 import com.avvanama.vehiclesales.ui.vehicle.VehicleDetailsViewModel
@@ -47,6 +49,17 @@ object AppViewModelProvider {
         }
         initializer {
             VehicleDetailsViewModel(
+                this.createSavedStateHandle(),
+                vehicleSalesApplication().container.vehicleRepository
+            )
+        }
+        initializer {
+            SalesViewModel(
+                vehicleSalesApplication().container.vehicleRepository
+            )
+        }
+        initializer {
+            AddSalesViewModel(
                 this.createSavedStateHandle(),
                 vehicleSalesApplication().container.vehicleRepository
             )
