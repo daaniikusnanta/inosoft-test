@@ -47,6 +47,8 @@ import com.avvanama.vehiclesales.database.Car
 import com.avvanama.vehiclesales.database.Vehicle
 import com.avvanama.vehiclesales.database.VehicleType
 import com.avvanama.vehiclesales.di.AppViewModelProvider
+import com.avvanama.vehiclesales.ui.HomeTabs
+import com.avvanama.vehiclesales.ui.VehicleSalesBottomBar
 import com.avvanama.vehiclesales.ui.components.VehicleSalesTopAppBar
 import com.avvanama.vehiclesales.ui.theme.VehicleSalesTheme
 import com.avvanama.vehiclesales.ui.vehicle.VehicleViewModel
@@ -55,7 +57,8 @@ import com.avvanama.vehiclesales.ui.vehicle.VehicleViewModel
 fun Sales(
     modifier: Modifier = Modifier,
     viewModel: SalesViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    onVehicleSelected: (Int, VehicleType) -> Unit
+    onVehicleSelected: (Int, VehicleType) -> Unit,
+    onNavigateToRoute: (String) -> Unit
 ) {
     val vehiclesUiState by viewModel.vehiclesUiState.collectAsState()
     val vehicles = vehiclesUiState.vehicleList
@@ -63,6 +66,13 @@ fun Sales(
     Scaffold(
         topBar = {
             VehicleSalesTopAppBar("Sales")
+        },
+        bottomBar = {
+            VehicleSalesBottomBar(
+                tabs = HomeTabs.values().toList(),
+                currentRoute = HomeTabs.SALES.route,
+                navigateToRoute = onNavigateToRoute
+            )
         },
         modifier = modifier
     ) {
@@ -76,6 +86,7 @@ fun Sales(
 fun VehicleList(
     vehicles: List<Vehicle>,
     onVehicleSelected: (Int, VehicleType) -> Unit,
+
     modifier: Modifier = Modifier,
 ) {
     Column (
